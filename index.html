@@ -29,8 +29,6 @@ input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px s
 .intro{width:min(900px,95vw);text-align:center;font-size:clamp(28px,7vw,55px);line-height:1.35}
 .shadow{position:relative;width:min(700px,94vw);aspect-ratio:16/9;margin:22px auto;border-radius:12px;overflow:hidden;background:#111;box-shadow:0 0 70px #ffffff12}
 .shadow img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(.72) blur(8px) brightness(.66) contrast(1.14);transform:scale(1.03)}
-.shadow-placeholder{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 42%,#3b3c45,#15161c 52%,#07080d);color:#ffffff80;filter:blur(5px);transform:scale(1.03)}
-.shadow-placeholder span{font:10px Arial;letter-spacing:.28em;text-transform:uppercase}.shadow-placeholder strong{display:block;margin-top:12px;font-weight:400;font-size:clamp(24px,6vw,42px)}
 .shadow:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 0 35%,#0004 70%,#0008 100%)}
 .stat{font-family:monospace;border-left:2px solid #ffffff55;padding:14px 16px;margin:22px 0;line-height:1.65}
 .help{font:12px Arial;line-height:1.45;opacity:.58;margin-bottom:12px}
@@ -49,7 +47,6 @@ input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px s
 .rev.show{animation:rev 1.8s ease}
 @keyframes rev{from{opacity:0;filter:blur(12px);transform:scale(.96)}to{opacity:1;filter:blur(0);transform:scale(1)}}
 .mont{display:block;max-width:min(94vw,1080px);max-height:70vh;object-fit:contain;border-radius:12px;box-shadow:0 0 100px #ffffff20}
-.reveal-placeholder{width:min(70vw,620px);aspect-ratio:4/3;display:grid;place-content:center;text-align:center;padding:24px;border:1px solid var(--line);border-radius:12px;background:radial-gradient(circle at 50% 42%,#3b3c45,#15161c 52%,#07080d);box-shadow:0 0 100px #ffffff20}.reveal-placeholder span{font:10px Arial;letter-spacing:.25em;opacity:.55;text-transform:uppercase}.reveal-placeholder strong{display:block;margin-top:13px;font-weight:400;font-size:clamp(25px,6vw,46px)}
 .copy{white-space:pre-wrap;font-size:18px;line-height:1.82}
 .message-panel{width:min(820px,100%);max-height:90vh;overflow:auto}
 .cdblock{text-align:center}
@@ -69,7 +66,7 @@ input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px s
 </head>
 <body>
 <canvas id="stars"></canvas>
-<div id="dock"><div id="ambientYT"></div><div id="songYT"></div></div>
+<div id="dock"><audio id="ambientAudio" preload="auto" loop src="/audio/interstellar.mp3"></audio><audio id="songAudio" preload="auto" src="/audio/quase-sem-querer.mp3"></audio></div>
 <main id="app">
 <section id="gate" class="scene active"><button id="enter" disabled>CARREGANDO...</button></section>
 
@@ -85,7 +82,7 @@ input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px s
 
 <section id="pla" class="scene"><div class="panel">
 <div class="ey">II — PLATÃO</div><h1>NÃO CONFIE NA IMAGEM.</h1>
-<div class="shadow" aria-label="Representação borrada"><div class="shadow-placeholder"><span>uma representação</span><strong>entre sombras</strong></div></div>
+<div class="shadow"><img src="/montagem-real.jpeg" alt="Representação borrada de duas pessoas juntas"></div>
 <p>Você está olhando para uma representação.</p>
 <p style="opacity:.68">Sombras podem sugerir a realidade, mas não são a realidade.</p>
 <p class="q">O que falta para que ela se torne uma lembrança?</p>
@@ -115,7 +112,7 @@ input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px s
 
 <section id="reveal" class="scene"><div id="nova" class="nova"></div>
 <div id="rev" class="rev hidden">
-<div class="reveal-placeholder" role="img" aria-label="Espaço temporário para a montagem original"><div><span>uma falsa memória</span><strong>entre sombras e fatos</strong></div></div>
+<img class="mont" src="/montagem-real.jpeg" alt="Montagem de duas pessoas juntas em um lugar significativo">
 <div style="font:11px Arial;letter-spacing:.18em;opacity:.42">UMA REPRESENTAÇÃO</div>
 <div><button id="songTap" class="hidden">♫ TOCAR QUASE SEM QUERER</button> <button id="revCont">CONTINUAR</button></div>
 </div></section>
@@ -185,7 +182,6 @@ Algumas coisas precisam do tempo certo para existir.</div>
 </div></section>
 </main>
 
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 const $=s=>document.querySelector(s), scenes=[...document.querySelectorAll('.scene')], delay=m=>new Promise(r=>setTimeout(r,m));
 const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
@@ -197,16 +193,15 @@ function rs(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*deviceP
 function dr(){cx.clearRect(0,0,innerWidth,innerHeight);st.forEach(s=>{cx.globalAlpha=s.a;cx.fillStyle='white';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill()});requestAnimationFrame(dr)}
 addEventListener('resize',rs);rs();dr();
 
-let amb,song,ar=false,sr=false,finalState=false,serverState={deadline:null,photoUrl:null,expired:false};
-window.onYouTubeIframeAPIReady=()=>{amb=new YT.Player('ambientYT',{width:'200',height:'113',videoId:'5gO0xpY_Y3E',playerVars:{controls:0,playsinline:1,rel:0,loop:1,playlist:'5gO0xpY_Y3E',enablejsapi:1},events:{onReady:()=>{ar=true;const b=$('#enter');if(b){b.disabled=false;b.textContent='ENTRAR'}},onError:()=>{const b=$('#enter');if(b){b.disabled=false;b.textContent='ENTRAR'}}}});song=new YT.Player('songYT',{width:'200',height:'113',videoId:'lk_EXr9xEr0',playerVars:{controls:0,playsinline:1,rel:0,enablejsapi:1},events:{onReady:()=>sr=true,onError:()=>$('#songTap')?.classList.remove('hidden')}})}
-setTimeout(()=>{const b=$('#enter');if(b?.disabled){b.disabled=false;b.textContent='ENTRAR'}},2200);
-function startAmb(){if(finalState||!ar)return false;try{amb.unMute();amb.setVolume(52);amb.playVideo();return true}catch(e){return false}}
-function stopAmb(){if(amb)try{amb.pauseVideo()}catch(e){}}
-function startSong(){stopAmb();if(!sr){$('#songTap').classList.remove('hidden');return}try{song.seekTo(0,true);song.unMute();song.setVolume(78);song.playVideo()}catch(e){$('#songTap').classList.remove('hidden')}}
-function pauseSong(){if(song)try{song.pauseVideo()}catch(e){}}
+const ambient=$('#ambientAudio'),song=$('#songAudio');let finalState=false,serverState={deadline:null,photoUrl:null,expired:false};
+$('#enter').disabled=false;$('#enter').textContent='ENTRAR';
+function startAmb(){if(finalState)return false;ambient.volume=.48;const play=ambient.play();if(play)play.catch(()=>{});return true}
+function stopAmb(){ambient.pause()}
+function startSong(){stopAmb();song.currentTime=0;song.volume=.78;const play=song.play();if(play)play.catch(()=>$('#songTap').classList.remove('hidden'))}
+function pauseSong(){song.pause()}
 function stopAll(){finalState=true;stopAmb();pauseSong()}
 
-$('#enter').onclick=async()=>{startAmb();if(sr)try{song.mute();song.setVolume(0);song.seekTo(0,true);song.playVideo();song.pauseVideo()}catch(e){}show('intro');let t='Há coisas que só existem quando alguém as percebe.';$('#introLine').textContent='';for(const ch of t){$('#introLine').textContent+=ch;await delay(60)}await delay(1200);show('soc')};
+$('#enter').onclick=async()=>{startAmb();show('intro');let t='Há coisas que só existem quando alguém as percebe.';$('#introLine').textContent='';for(const ch of t){$('#introLine').textContent+=ch;await delay(60)}await delay(1200);show('soc')};
 
 let socAttempts=0;
 $('#socForm').onsubmit=e=>{e.preventDefault();if(!$('#socAns').value.trim())return;socAttempts++;$('#socFb').textContent=socAttempts===1?'Boa hipótese. Mas talvez a pergunta seja menos sobre o que existe — e mais sobre aquilo que nunca chegou a ser registrado.':'Sócrates provavelmente responderia com outra pergunta. Talvez valha observar o que falta, não o que já está aí.';if(socAttempts>=2){$('#socHint').classList.remove('hidden');$('#socCont').classList.remove('hidden')}};
@@ -235,7 +230,7 @@ setInterval(updateCount,1000);
 
 $('#upload').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>12582912){alert('Escolha uma imagem de até 12 MB.');e.target.value='';return}if(!confirm('Esta será a única fotografia deste lugar e não poderá ser trocada. Tem certeza?')){e.target.value='';return}const label=e.target.closest('label');label.textContent='ENVIANDO…';label.setAttribute('aria-busy','true');try{const response=await fetch('/api/photo',{method:'POST',headers:{'content-type':f.type},body:f});const data=await response.json();if(response.status===409&&data.url){showPermanent(data.url);return}if(!response.ok)throw new Error(data.error||'Não foi possível guardar a fotografia.');showPermanent(data.url)}catch(err){alert(err.message);location.reload()}};
 function showPermanent(src){stopAll();$('#finalPhoto').src=src;show('perm')}
-$('#finalSong').onclick=()=>{finalState=true;stopAmb();if(!sr)return;try{const s=song.getPlayerState();if(s===YT.PlayerState.PLAYING){song.pauseVideo();$('#finalSong').textContent='♫ Quase Sem Querer — tocar'}else{song.seekTo(0,true);song.unMute();song.setVolume(75);song.playVideo();$('#finalSong').textContent='♫ Quase Sem Querer — pausar'}}catch(e){}};
+$('#finalSong').onclick=()=>{finalState=true;stopAmb();if(!song.paused){song.pause();$('#finalSong').textContent='♫ Quase Sem Querer — tocar'}else{song.volume=.75;song.play().then(()=>$('#finalSong').textContent='♫ Quase Sem Querer — pausar').catch(()=>alert('O arquivo de áudio ainda não está disponível.'))}};
 async function restoreState(){try{const response=await fetch('/api/state',{cache:'no-store'});if(!response.ok)return;serverState=await response.json();if(serverState.photoUrl)showPermanent(serverState.photoUrl);else if(serverState.expired){show('uploadStage');updateCount()}}catch(e){}}
 restoreState();
 </script>
