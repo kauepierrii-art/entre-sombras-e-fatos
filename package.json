@@ -1,0 +1,12 @@
+{
+  "name": "entre-sombras-e-fatos",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vercel dev",
+    "check": "node --check api/state.js && node --check api/photo.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.0.0"
+  }
+}
