@@ -5,172 +5,54 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Entre sombras e fatos</title>
 <style>
-:root{--bg:#020205;--fg:#f5f3ef;--muted:#ffffff9a;--line:#ffffff26}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:Georgia,serif}
-body{overflow-x:hidden}
-#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;background:radial-gradient(circle at 50% 45%,#10101b,#020205 62%)}
-#app{position:relative;z-index:2}
-.scene{display:none;min-height:100vh;padding:22px 15px;align-items:center;justify-content:center}
-.scene.active{display:flex;animation:fade .65s ease}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.panel{width:min(760px,100%);padding:30px 22px;border:1px solid var(--line);border-radius:16px;background:#05050bcf;backdrop-filter:blur(8px)}
-.wide{width:min(960px,100%)}
-.ey{font:11px Arial;letter-spacing:.25em;opacity:.58}
-h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,8vw,48px)}
-p{font-size:17px;line-height:1.68}
-.q{font-size:clamp(22px,6vw,34px)}
-button,label.up{border:1px solid #ffffff70;background:#ffffff08;color:#fff;border-radius:999px;padding:12px 18px;font:11px Arial;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-form{display:flex;gap:10px;margin-top:20px}
-input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px solid #ffffff70;color:#fff;font:17px Georgia;padding:10px;outline:0}
-.fb{min-height:55px;margin-top:16px;font-style:italic;opacity:.84}
-.cont{display:flex;justify-content:flex-end;margin-top:12px}
-.hidden{display:none!important}
-.intro{width:min(900px,95vw);text-align:center;font-size:clamp(28px,7vw,55px);line-height:1.35}
-.shadow{position:relative;width:min(700px,94vw);aspect-ratio:16/9;margin:22px auto;border-radius:12px;overflow:hidden;background:#111;box-shadow:0 0 70px #ffffff12}
-.shadow img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(.82) blur(10px) brightness(.32) contrast(1.18);transform:scale(1.06);transition:filter 1.1s ease,transform 1.1s ease}
-.shadow.lit img{filter:grayscale(.62) blur(8px) brightness(.48) contrast(1.12);transform:scale(1.04)}
-.shadow:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 0 30%,#0006 67%,#000a 100%)}
-.stat{font-family:monospace;border-left:2px solid #ffffff55;padding:14px 16px;margin:22px 0;line-height:1.65}
-.help{font:12px Arial;line-height:1.45;opacity:.58;margin-bottom:12px}
-.becoming{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px 0}
-.pot{min-height:108px;border:1px solid #ffffff33;border-radius:12px;background:#ffffff08;color:#fff;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;cursor:pointer}
-.pot .from{font:11px Arial;letter-spacing:.16em;opacity:.58}.pot .to{font-size:23px}.pot.done{background:#ffffff12;border-color:#ffffff70}.pot.done .from{text-decoration:line-through;opacity:.35}
-.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}
-.fact{border:1px solid #ffffff2b;border-radius:12px;padding:15px 12px;background:#ffffff06;text-align:center;min-height:88px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:15px}.fact .sym{font-size:27px}
-#reveal{position:relative;overflow:hidden}
-.nova{width:8px;height:8px;border-radius:50%;background:white;opacity:0}
-.nova.go{animation:nova 3.7s ease forwards}
-@keyframes nova{0%{opacity:1;transform:scale(.2);box-shadow:0 0 20px 10px white}48%{opacity:1;transform:scale(5);box-shadow:0 0 110px 50px white}70%{opacity:1;transform:scale(100)}100%{opacity:0;transform:scale(180)}}
-.rev{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px}
-.rev.show{animation:rev 1.8s ease}
-@keyframes rev{from{opacity:0;filter:blur(12px);transform:scale(.96)}to{opacity:1;filter:blur(0);transform:scale(1)}}
-.mont{display:block;max-width:min(94vw,1080px);max-height:70vh;object-fit:contain;border-radius:12px;box-shadow:0 0 100px #ffffff20}
-.copy{white-space:pre-wrap;font-size:18px;line-height:1.82}
-.message-panel{width:min(820px,100%);max-height:90vh;overflow:auto}
-.cdblock{text-align:center}
-.cdlabel{font:10px Arial;letter-spacing:.19em;opacity:.6}
-.count{font:clamp(25px,8vw,46px) monospace;margin:16px 0 10px}
-.note{opacity:.62;font-size:13px}
-.perm{text-align:center;width:min(850px,100%)}
-.eq{font:clamp(19px,5vw,28px) monospace;opacity:.82;margin-bottom:18px}
-.photo{display:block;max-width:min(94vw,760px);max-height:66vh;object-fit:contain;margin:auto;border-radius:12px}
-.date{margin-top:18px;opacity:.48}
-.music{margin-top:14px}
-#dock{position:fixed;width:200px;height:226px;left:0;top:0;overflow:hidden;opacity:.001;pointer-events:none;z-index:1}
-@media(min-width:720px){.panel{padding:38px}.facts{grid-template-columns:repeat(4,minmax(0,1fr))}.copy{font-size:20px}}
-@media(max-width:640px){form{flex-direction:column}.cont{justify-content:center}.becoming{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}}
-</style>
-</head>
-<body>
-<canvas id="stars"></canvas>
-<div id="dock"><audio id="ambientAudio" preload="auto" loop src="/audio/interstellar.mp3"></audio><audio id="songAudio" preload="auto" src="/audio/quase-sem-querer.mp3"></audio></div>
-<main id="app">
-<section id="gate" class="scene active"><button id="enter" disabled>CARREGANDO...</button></section>
-
-<section id="intro" class="scene"><div id="introLine" class="intro"></div></section>
-
-<section id="soc" class="scene"><div class="panel">
-<div class="ey">I — SÓCRATES</div><h1>PERGUNTE.</h1>
-<p class="q">O que existe entre nós que nunca existiu?</p>
-<form id="socForm"><input id="socAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form>
-<div id="socSecond" class="hidden">
-<p id="socFollow" class="q" style="font-size:clamp(19px,5vw,27px)">Como você reconheceria essa coisa, se ela existisse?</p>
-<form id="socForm2"><input id="socAns2" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form>
-</div>
-<p id="socFb" class="fb"></p>
-<div class="cont"><button id="socCont" class="hidden">CONTINUAR</button></div>
-</div></section>
-
-<section id="pla" class="scene"><div class="panel">
-<div class="ey">II — PLATÃO</div><h1>NÃO CONFIE NAS SOMBRAS.</h1>
-<div id="platoShadow" class="shadow"><img src="/montagem-real.jpeg" alt="Representação borrada de duas pessoas juntas"></div>
-<p>Na caverna de Platão, sombras projetadas numa parede podiam ser confundidas com a própria realidade.</p>
-<p style="opacity:.68">Uma representação pode sugerir o que existe — sem ser aquilo que parece.</p>
-<p class="q">O que falta para enxergar além da sombra?</p>
-<form id="plaForm"><input id="plaAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form>
-<p id="plaFb" class="fb"></p>
-<div id="plaExit" class="hidden">
-<p class="q" style="font-size:clamp(19px,5vw,27px)">Você já sabe onde fica a caverna.</p>
-<form id="plaPhraseForm"><input id="plaPhrase" autocomplete="off" placeholder="o que você encontrou fora daqui?"><button>RESPONDER</button></form>
-<p id="plaPhraseFb" class="fb"></p>
-</div>
-<div class="cont"><button id="plaCont" class="hidden">CONTINUAR</button></div>
-</div></section>
-
-<section id="ari" class="scene"><div class="panel wide">
-<div class="ey">III — ARISTÓTELES</div><h1>ENTRE O QUE PODE EXISTIR E O QUE EXISTE.</h1>
-<p>Para Aristóteles, existir como possibilidade não é o mesmo que existir de fato.</p>
-<p style="opacity:.7">Algumas coisas existem primeiro em potência. Só depois, quando acontecem, tornam-se ato.</p>
-<div class="help">Toque em cada possibilidade para fazê-la acontecer.</div>
-<div class="becoming">
-<button type="button" class="pot" data-to="ÁRVORE"><span class="from">SEMENTE</span><span class="to">?</span></button>
-<button type="button" class="pot" data-to="RISOTO"><span class="from">RECEITA</span><span class="to">?</span></button>
-<button type="button" class="pot" data-to="VIAGEM"><span class="from">PLANO</span><span class="to">?</span></button>
-</div>
-<div id="ariFacts" class="hidden">
-<p>Algumas possibilidades deixam de ser possibilidades.</p>
-<p><strong>Elas acontecem.</strong></p>
-<div class="facts">
-<div class="fact"><span class="sym">⛩️</span><span>Liberdade</span></div>
-<div class="fact"><span class="sym">✈️</span><span>Europa</span></div>
-<div class="fact"><span class="sym">📚</span><span>Biblioteca Mário de Andrade</span></div>
-<div class="fact"><span class="sym">🍽️</span><span>Risoto</span></div>
-<div class="fact"><span class="sym">🏠</span><span>Zona Leste</span></div>
-<div class="fact"><span class="sym">🚲</span><span>Bicicleta</span></div>
-<div class="fact"><span class="sym">🐈</span><span>Veterinário</span></div>
-</div>
-<div class="stat">SETE ACONTECIMENTOS.<br>SETE FATOS.<br><strong>TODOS ACONTECERAM.</strong></div>
-<p>Mas existe algo curioso sobre todos eles.</p>
-<p class="q">Existe uma coisa que poderia ter existido em qualquer um desses momentos.<br><br>Mas não existiu em nenhum.<br><br>O que é?</p>
-<form id="ariForm"><input id="ariAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form>
-<p id="ariFb" class="fb"></p>
-<div class="cont"><button id="ariCont" class="hidden">CONTINUAR</button></div>
-</div>
-</div></section>
-
-<section id="reveal" class="scene"><div id="nova" class="nova"></div>
-<div id="rev" class="rev hidden">
-<img class="mont" src="/montagem-real.jpeg" alt="Montagem de duas pessoas juntas em um lugar significativo">
-<div style="font:11px Arial;letter-spacing:.18em;opacity:.42">UMA REPRESENTAÇÃO</div>
-<div><button id="songTap" class="hidden">♫ TOCAR QUASE SEM QUERER</button> <button id="revCont">CONTINUAR</button></div>
-</div></section>
-
-<section id="message" class="scene"><div class="panel message-panel">
-<div class="ey">IV — O QUE FALTAVA DIZER</div>
-<div class="copy">É uma imagem bonita.
+:root{--bg:#020205;--fg:#f5f3ef;--muted:#ffffff9a;--line:#ffffff26}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:Georgia,serif}body{overflow-x:hidden}#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;background:radial-gradient(circle at 50% 45%,#10101b,#020205 62%)}#app{position:relative;z-index:2}.scene{display:none;min-height:100vh;padding:22px 15px;align-items:center;justify-content:center}.scene.active{display:flex;animation:fade .65s ease}@keyframes fade{from{opacity:0}to{opacity:1}}.panel{width:min(760px,100%);padding:30px 22px;border:1px solid var(--line);border-radius:16px;background:#05050bcf;backdrop-filter:blur(8px)}.wide{width:min(960px,100%)}.ey{font:11px Arial;letter-spacing:.25em;opacity:.58}h1{font-weight:400;letter-spacing:.1em;font-size:clamp(28px,8vw,48px)}p{font-size:17px;line-height:1.68}.q{font-size:clamp(22px,6vw,34px)}button,label.up{border:1px solid #ffffff70;background:#ffffff08;color:#fff;border-radius:999px;padding:12px 18px;font:11px Arial;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}form{display:flex;gap:10px;margin-top:20px}input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px solid #ffffff70;color:#fff;font:17px Georgia;padding:10px;outline:0}.fb{min-height:55px;margin-top:16px;font-style:italic;opacity:.84}.cont{display:flex;justify-content:flex-end;margin-top:12px}.hidden{display:none!important}.intro{width:min(900px,95vw);text-align:center;font-size:clamp(28px,7vw,55px);line-height:1.35}.shadow{position:relative;width:min(700px,94vw);aspect-ratio:16/9;margin:22px auto;border-radius:12px;overflow:hidden;background:#111;box-shadow:0 0 70px #ffffff12}.shadow img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(.82) blur(10px) brightness(.32) contrast(1.18);transform:scale(1.06);transition:filter 1.1s ease,transform 1.1s ease}.shadow.lit img{filter:grayscale(.62) blur(8px) brightness(.48) contrast(1.12);transform:scale(1.04)}.shadow:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 0 30%,#0006 67%,#000a 100%)}.help{font:12px Arial;line-height:1.45;opacity:.58;margin-bottom:12px}.becoming{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px 0}.pot{min-height:108px;border:1px solid #ffffff33;border-radius:12px;background:#ffffff08;color:#fff;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;cursor:pointer}.pot .from{font:11px Arial;letter-spacing:.16em;opacity:.58}.pot .to{font-size:23px}.pot.done{background:#ffffff12;border-color:#ffffff70}.pot.done .from{text-decoration:line-through;opacity:.35}.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}.fact{border:1px solid #ffffff2b;border-radius:12px;padding:15px 12px;background:#ffffff06;text-align:center;min-height:88px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:15px}.fact .sym{font-size:27px}#reveal{position:relative;overflow:hidden}.nova{width:8px;height:8px;border-radius:50%;background:white;opacity:0}.nova.go{animation:nova 3.7s ease forwards}@keyframes nova{0%{opacity:1;transform:scale(.2);box-shadow:0 0 20px 10px white}48%{opacity:1;transform:scale(5);box-shadow:0 0 110px 50px white}70%{opacity:1;transform:scale(100)}100%{opacity:0;transform:scale(180)}}.rev{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px}.rev.show{animation:rev 1.8s ease}@keyframes rev{from{opacity:0;filter:blur(12px);transform:scale(.96)}to{opacity:1;filter:blur(0);transform:scale(1)}}.mont{display:block;max-width:min(94vw,1080px);max-height:70vh;object-fit:contain;border-radius:12px;box-shadow:0 0 100px #ffffff20}.copy{white-space:pre-wrap;font-size:18px;line-height:1.82}.message-panel{width:min(820px,100%);max-height:90vh;overflow:auto}.choice{margin-top:34px;padding-top:26px;border-top:1px solid #ffffff20;text-align:center}.cdlabel{font:10px Arial;letter-spacing:.19em;opacity:.6}.count{font:clamp(25px,8vw,46px) monospace;margin:16px 0 10px}.note{opacity:.62;font-size:13px}.perm{text-align:center;width:min(850px,100%)}.eq{font:clamp(19px,5vw,28px) monospace;opacity:.82;margin-bottom:18px}.photo{display:block;max-width:min(94vw,760px);max-height:66vh;object-fit:contain;margin:auto;border-radius:12px}.date{margin-top:18px;opacity:.48}.music{margin-top:14px}#dock{position:fixed;width:200px;height:226px;left:0;top:0;overflow:hidden;opacity:.001;pointer-events:none;z-index:1}@media(min-width:720px){.panel{padding:38px}.facts{grid-template-columns:repeat(3,minmax(0,1fr))}.copy{font-size:20px}}@media(max-width:640px){form{flex-direction:column}.cont{justify-content:center}.becoming{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<canvas id="stars"></canvas><div id="dock"><audio id="ambientAudio" preload="auto" loop src="/audio/interstellar.mp3"></audio><audio id="songAudio" preload="auto" src="/audio/quase-sem-querer.mp3"></audio></div><main id="app">
+<section id="gate" class="scene active"><button id="enter" disabled>CARREGANDO...</button></section><section id="intro" class="scene"><div id="introLine" class="intro"></div></section>
+<section id="soc" class="scene"><div class="panel"><div class="ey">I — SÓCRATES</div><h1>PERGUNTE.</h1><p class="q">O que existe entre nós que nunca existiu?</p><form id="socForm"><input id="socAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form><div id="socSecond" class="hidden"><p class="q" style="font-size:clamp(19px,5vw,27px)">Como você reconheceria essa coisa, se ela existisse?</p><form id="socForm2"><input id="socAns2" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form></div><p id="socFb" class="fb"></p><div class="cont"><button id="socCont" class="hidden">CONTINUAR</button></div></div></section>
+<section id="pla" class="scene"><div class="panel"><div class="ey">II — PLATÃO</div><h1>NÃO CONFIE NAS SOMBRAS.</h1><div id="platoShadow" class="shadow"><img src="/montagem-real.jpeg" alt="Representação borrada de duas pessoas juntas"></div><p>Na caverna de Platão, sombras projetadas numa parede podiam ser confundidas com a própria realidade.</p><p style="opacity:.68">Uma representação pode sugerir o que existe — sem ser aquilo que parece.</p><p class="q">O que falta para enxergar além da sombra?</p><form id="plaForm"><input id="plaAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form><p id="plaFb" class="fb"></p><div id="plaExit" class="hidden"><p class="q" style="font-size:clamp(19px,5vw,27px)">Você já sabe onde fica a caverna.</p><form id="plaPhraseForm"><input id="plaPhrase" autocomplete="off" placeholder="o que você encontrou fora daqui?"><button>RESPONDER</button></form><p id="plaPhraseFb" class="fb"></p></div><div class="cont"><button id="plaCont" class="hidden">CONTINUAR</button></div></div></section>
+<section id="ari" class="scene"><div class="panel wide"><div class="ey">III — ARISTÓTELES</div><h1>ENTRE O QUE PODE EXISTIR E O QUE EXISTE.</h1><p>Para Aristóteles, existir como possibilidade não é o mesmo que existir de fato.</p><p style="opacity:.7">Algumas coisas existem primeiro em potência. Só depois, quando acontecem, tornam-se ato.</p><div class="help">Toque em cada possibilidade para fazê-la acontecer.</div><div class="becoming"><button type="button" class="pot" data-to="ÁRVORE"><span class="from">SEMENTE</span><span class="to">?</span></button><button type="button" class="pot" data-to="ENCONTRO"><span class="from">CONVERSA</span><span class="to">?</span></button><button type="button" class="pot" data-to="CONEXÃO"><span class="from">AFINIDADE</span><span class="to">?</span></button></div><div id="ariFacts" class="hidden"><p>Nenhuma dessas coisas ficou apenas em potência.</p><p><strong>Todas aconteceram.</strong></p><p>Algumas viraram histórias.<br>Outras, pequenas lembranças.</p><div class="facts"><div class="fact"><span class="sym">⛩️</span><span>O primeiro encontro</span></div><div class="fact"><span class="sym">📚</span><span>Um terraço, livros e música</span></div><div class="fact"><span class="sym">🍽️</span><span>Um risoto especial</span></div><div class="fact"><span class="sym">🏠</span><span>A primeira vez na minha Zona Leste</span></div><div class="fact"><span class="sym">🚲</span><span>Duas bicicletas e um parque</span></div><div class="fact"><span class="sym">🐈</span><span>Uma ida ao veterinário</span></div></div><p>Mas existe algo curioso em todas elas.</p><p class="q">Existe uma coisa que poderia ter existido em qualquer um desses momentos.<br><br>Mas não existiu em nenhum.<br><br>O que é?</p><form id="ariForm"><input id="ariAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form><p id="ariFb" class="fb"></p><div class="cont"><button id="ariCont" class="hidden">CONTINUAR</button></div></div></div></section>
+<section id="reveal" class="scene"><div id="nova" class="nova"></div><div id="rev" class="rev hidden"><img class="mont" src="/montagem-real.jpeg" alt="Montagem de duas pessoas juntas em um lugar significativo"><div><button id="songTap" class="hidden">♫ TOCAR QUASE SEM QUERER</button> <button id="revCont">CONTINUAR</button></div></div></section>
+<section id="message" class="scene"><div class="panel message-panel"><div class="ey">IV — O QUE FALTAVA DIZER</div><div id="messageCopy" class="copy"></div><div id="choice" class="choice hidden"><div class="cdlabel">ESTE ESPAÇO PERMANECE DISPONÍVEL ENQUANTO O ENIGMA EXISTIR.</div><div id="count" class="count">24:00:00</div><p id="cdnote" class="note">Depois disso, fica apenas o que você decidir deixar aqui.</p><label class="up">ESCOLHER UMA IMAGEM<input id="upload" type="file" accept="image/*" hidden></label></div></div></section>
+<section id="perm" class="scene"><div class="perm"><div class="eq">P(encontro | aconteceu) = 1</div><img id="finalPhoto" class="photo" alt="Fotografia escolhida"><div class="music"><button id="finalSong" style="text-transform:none;letter-spacing:.02em">♫ Quase Sem Querer — tocar</button></div><div class="date">São Paulo, 2026.</div></div></section></main>
+<script>
+const $=s=>document.querySelector(s),scenes=[...document.querySelectorAll('.scene')],delay=m=>new Promise(r=>setTimeout(r,m));const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();const isPhoto=s=>norm(s).includes('foto')||norm(s).includes('fotografia');function show(id){scenes.forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');scrollTo(0,0)}
+const cv=$('#stars'),cx=cv.getContext('2d');let st=[];function rs(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);st=Array.from({length:110},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+.2,a:Math.random()*.7+.2}))}function dr(){cx.clearRect(0,0,innerWidth,innerHeight);st.forEach(s=>{cx.globalAlpha=s.a;cx.fillStyle='white';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill()});requestAnimationFrame(dr)}addEventListener('resize',rs);rs();dr();
+const ambient=$('#ambientAudio'),song=$('#songAudio');let finalState=false,serverState={deadline:null,photoUrl:null,expired:false};$('#enter').disabled=false;$('#enter').textContent='ENTRAR';function startAmb(){if(finalState)return false;ambient.volume=.48;const p=ambient.play();if(p)p.catch(()=>{});return true}function stopAmb(){ambient.pause()}function startSong(){stopAmb();song.currentTime=0;song.volume=.78;const p=song.play();if(p)p.catch(()=>$('#songTap').classList.remove('hidden'))}function pauseSong(){song.pause()}function stopAll(){finalState=true;stopAmb();pauseSong()}
+$('#enter').onclick=async()=>{startAmb();show('intro');let t='Há coisas que só existem quando alguém as percebe.';$('#introLine').textContent='';for(const ch of t){$('#introLine').textContent+=ch;await delay(60)}await delay(1200);show('soc')};
+$('#socForm').onsubmit=e=>{e.preventDefault();if(!$('#socAns').value.trim())return;$('#socFb').textContent='Interessante. Mas você respondeu como se já soubesse o que está procurando.';$('#socForm').classList.add('hidden');$('#socSecond').classList.remove('hidden');setTimeout(()=>$('#socAns2').focus(),100)};$('#socForm2').onsubmit=e=>{e.preventDefault();if(!$('#socAns2').value.trim())return;$('#socFb').innerHTML='Talvez a pergunta não esteja pedindo uma coisa.<br>Talvez esteja pedindo uma ausência.<br><br>Você não vai encontrar essa resposta aqui.<br>Só vai reconhecê-la quando ela aparecer na sua frente.<br><br><strong>Guarde a pergunta.</strong>';$('#socSecond').classList.add('hidden');$('#socCont').classList.remove('hidden')};$('#socCont').onclick=()=>show('pla');
+let platoLightFound=false;$('#plaForm').onsubmit=e=>{e.preventDefault();const a=norm($('#plaAns').value);if(a==='luz'){platoLightFound=true;$('#plaFb').innerHTML='Existe luz dentro da caverna.<br><br>É ela que permite que as sombras apareçam na parede.<br><br>Mas essa não é a luz que Platão procurava.<br><br><strong>Para encontrá-la, você precisa sair.</strong>';$('#plaForm').classList.add('hidden');$('#plaExit').classList.remove('hidden')}else $('#plaFb').textContent='Pense no que permite enxergar — mas não confunda a luz da caverna com a luz de fora.'};$('#plaPhraseForm').onsubmit=e=>{e.preventDefault();if(!platoLightFound)return;const a=norm($('#plaPhrase').value).replace(/\s+/g,' ');if(a==='conhecemos algo especial'){$('#platoShadow').classList.add('lit');$('#plaPhraseFb').innerHTML='Você saiu da caverna.<br><br>A luz permite enxergar.<br>Mas enxergar uma representação ainda não a transforma em realidade.';$('#plaPhraseForm').classList.add('hidden');$('#plaCont').classList.remove('hidden')}else if(a==='sol')$('#plaPhraseFb').textContent='Você encontrou a luz. Mas não é essa a resposta completa. Leia o que está ao redor dela.';else $('#plaPhraseFb').textContent='Ainda não. O que você encontrou fora daqui faz parte de uma frase.'};$('#plaCont').onclick=()=>show('ari');
+let actualized=0;document.querySelectorAll('.pot').forEach(btn=>btn.onclick=()=>{if(btn.classList.contains('done'))return;btn.classList.add('done');btn.querySelector('.to').textContent=btn.dataset.to;actualized++;if(actualized===3)setTimeout(()=>{$('#ariFacts').classList.remove('hidden');$('#ariFacts').scrollIntoView({behavior:'smooth',block:'start'})},450)});$('#ariForm').onsubmit=e=>{e.preventDefault();if(isPhoto($('#ariAns').value)){$('#ariFb').textContent='Então talvez esteja na hora de transformar uma possibilidade em realidade.';$('#ariCont').classList.remove('hidden')}else $('#ariFb').textContent='Pense em algo que poderia ter existido em qualquer um desses momentos — mas nunca existiu.'};$('#ariCont').onclick=async()=>{show('reveal');$('#rev').classList.add('hidden');$('#nova').classList.remove('go');void $('#nova').offsetWidth;$('#nova').classList.add('go');await delay(2900);stopAmb();await delay(300);$('#rev').classList.remove('hidden');$('#rev').classList.add('show');startSong()};
+$('#songTap').onclick=startSong;
+const messageText=`É uma imagem bonita.
 
 Só tem um pequeno problema:
 
 ela nunca aconteceu.
 
-Depois de tantas conversas, tantos momentos e algumas histórias que provavelmente ainda vamos lembrar por muito tempo, percebi uma coisa meio absurda:
+Depois de tantas conversas, alguns lugares, algumas histórias e alguns momentos que acabaram ficando comigo, percebi uma coisa curiosa:
 
-a gente não tem uma única foto juntos.
+não existe nenhuma fotografia nossa.
 
-Então essa parte ficou incompleta.
+Até hoje, tudo o que aconteceu entre nós ficou exatamente onde talvez muitas coisas importantes fiquem:
 
-Acho que ainda precisamos criar a original.
+na memória.
 
-Quando ela existir, o lugar dela é aqui.
+E talvez esteja tudo bem assim.
 
-Tudo o que aconteceu até aqui aconteceu uma única vez.
+Algumas coisas não precisam de um registro para terem acontecido.
 
-Este enigma não poderá ser refeito.
+Mas este lugar pode guardar uma coisa diferente.
 
-A montagem não aparecerá novamente.
+Se algum dia existir uma imagem que você queira deixar aqui, ela pode ocupar o lugar desta que nunca aconteceu.
 
-Depois, sobra apenas um espaço reservado para algo que ainda não existe.
+E, se não existir — ou se você simplesmente preferir deixar tudo como está — também está tudo certo.
 
-A nossa primeira foto juntos.
+Talvez algumas lembranças devam continuar existindo apenas dentro de quem viveu aquilo.
 
-Você só poderá escolher uma.
+Este espaço vai continuar aqui por um tempo.
 
-Depois de enviada, ela passa a ocupar definitivamente o lugar da montagem.
-
-E este site deixa de ser um enigma.
-
-Vira apenas uma pequena lembrança de alguns momentos que, por acaso, aconteceram.
+Você decide se alguma coisa deve ficar nele.
 
 P.S.
 
@@ -180,75 +62,11 @@ P.P.S.
 
 Não tenha pressa.
 
-Algumas coisas precisam do tempo certo para existir.</div>
-<div class="cont"><button id="messageCont">CONTINUAR</button></div>
-</div></section>
-
-<section id="uploadStage" class="scene"><div class="panel">
-<div class="ey">V — UM ESPAÇO RESERVADO</div>
-<div class="cdblock">
-<div class="cdlabel">O ENIGMA DESAPARECE. A FOTO NÃO TEM PRAZO.</div>
-<div id="count" class="count">24:00:00</div>
-<p id="cdnote" class="note">Quando o tempo acabar, fica apenas o espaço reservado para a foto.</p>
-<label class="up">ESCOLHER NOSSA FOTO<input id="upload" type="file" accept="image/*" hidden></label>
-</div></div></section>
-
-<section id="perm" class="scene"><div class="perm">
-<div class="eq">P(encontro | aconteceu) = 1</div>
-<img id="finalPhoto" class="photo" alt="Nossa foto">
-<div class="music"><button id="finalSong" style="text-transform:none;letter-spacing:.02em">♫ Quase Sem Querer — tocar</button></div>
-<div class="date">São Paulo, 2026.</div>
-</div></section>
-</main>
-
-<script>
-const $=s=>document.querySelector(s), scenes=[...document.querySelectorAll('.scene')], delay=m=>new Promise(r=>setTimeout(r,m));
-const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
-const isPhoto=s=>norm(s).includes('foto')||norm(s).includes('fotografia');
-function show(id){scenes.forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');scrollTo(0,0)}
-
-const cv=$('#stars'),cx=cv.getContext('2d');let st=[];
-function rs(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);st=Array.from({length:110},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+.2,a:Math.random()*.7+.2}))}
-function dr(){cx.clearRect(0,0,innerWidth,innerHeight);st.forEach(s=>{cx.globalAlpha=s.a;cx.fillStyle='white';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill()});requestAnimationFrame(dr)}
-addEventListener('resize',rs);rs();dr();
-
-const ambient=$('#ambientAudio'),song=$('#songAudio');let finalState=false,serverState={deadline:null,photoUrl:null,expired:false};
-$('#enter').disabled=false;$('#enter').textContent='ENTRAR';
-function startAmb(){if(finalState)return false;ambient.volume=.48;const play=ambient.play();if(play)play.catch(()=>{});return true}
-function stopAmb(){ambient.pause()}
-function startSong(){stopAmb();song.currentTime=0;song.volume=.78;const play=song.play();if(play)play.catch(()=>$('#songTap').classList.remove('hidden'))}
-function pauseSong(){song.pause()}
-function stopAll(){finalState=true;stopAmb();pauseSong()}
-
-$('#enter').onclick=async()=>{startAmb();show('intro');let t='Há coisas que só existem quando alguém as percebe.';$('#introLine').textContent='';for(const ch of t){$('#introLine').textContent+=ch;await delay(60)}await delay(1200);show('soc')};
-
-$('#socForm').onsubmit=e=>{e.preventDefault();if(!$('#socAns').value.trim())return;$('#socFb').textContent='Interessante. Mas você respondeu como se já soubesse o que está procurando.';$('#socForm').classList.add('hidden');$('#socSecond').classList.remove('hidden');setTimeout(()=>$('#socAns2').focus(),100)};
-$('#socForm2').onsubmit=e=>{e.preventDefault();if(!$('#socAns2').value.trim())return;$('#socFb').innerHTML='Talvez a pergunta não esteja pedindo uma coisa.<br>Talvez esteja pedindo uma ausência.<br><br>Você não vai encontrar essa resposta aqui.<br>Só vai reconhecê-la quando ela aparecer na sua frente.<br><br><strong>Guarde a pergunta.</strong>';$('#socSecond').classList.add('hidden');$('#socCont').classList.remove('hidden')};
-$('#socCont').onclick=()=>show('pla');
-
-let platoLightFound=false;
-$('#plaForm').onsubmit=e=>{e.preventDefault();const a=norm($('#plaAns').value);if(a==='luz'){platoLightFound=true;$('#plaFb').innerHTML='Existe luz dentro da caverna.<br><br>É ela que permite que as sombras apareçam na parede.<br><br>Mas essa não é a luz que Platão procurava.<br><br><strong>Para encontrá-la, você precisa sair.</strong>';$('#plaForm').classList.add('hidden');$('#plaExit').classList.remove('hidden')}else{$('#plaFb').textContent='Pense no que permite enxergar — mas não confunda a luz da caverna com a luz de fora.'}};
-$('#plaPhraseForm').onsubmit=e=>{e.preventDefault();if(!platoLightFound)return;const a=norm($('#plaPhrase').value).replace(/\s+/g,' ');if(a==='conhecemos algo especial'){$('#platoShadow').classList.add('lit');$('#plaPhraseFb').innerHTML='Você saiu da caverna.<br><br>A luz permite enxergar.<br>Mas enxergar uma representação ainda não a transforma em realidade.';$('#plaPhraseForm').classList.add('hidden');$('#plaCont').classList.remove('hidden')}else if(a==='sol'){$('#plaPhraseFb').textContent='Você encontrou a luz. Mas não é essa a resposta completa. Leia o que está ao redor dela.'}else{$('#plaPhraseFb').textContent='Ainda não. O que você encontrou fora daqui faz parte de uma frase.'}};
-$('#plaCont').onclick=()=>show('ari');
-
-let actualized=0;
-document.querySelectorAll('.pot').forEach(btn=>btn.onclick=()=>{if(btn.classList.contains('done'))return;btn.classList.add('done');btn.querySelector('.to').textContent=btn.dataset.to;actualized++;if(actualized===3)setTimeout(()=>{$('#ariFacts').classList.remove('hidden');$('#ariFacts').scrollIntoView({behavior:'smooth',block:'start'})},450)});
-$('#ariForm').onsubmit=e=>{e.preventDefault();if(isPhoto($('#ariAns').value)){$('#ariFb').textContent='Então talvez esteja na hora de transformar uma possibilidade em realidade.';$('#ariCont').classList.remove('hidden')}else{$('#ariFb').textContent='Pense em algo que poderia ter existido em qualquer um desses momentos — mas nunca existiu.'}};
-$('#ariCont').onclick=async()=>{show('reveal');$('#rev').classList.add('hidden');$('#nova').classList.remove('go');void $('#nova').offsetWidth;$('#nova').classList.add('go');await delay(2900);stopAmb();await delay(300);$('#rev').classList.remove('hidden');$('#rev').classList.add('show');startSong()};
-
-$('#songTap').onclick=startSong;
-$('#revCont').onclick=()=>show('message');
-
-$('#messageCont').onclick=async()=>{let deadline=serverState.deadline;try{const response=await fetch('/api/state',{method:'POST'});if(response.ok)serverState=await response.json();deadline=serverState.deadline}catch(e){}if(!deadline){deadline=Number(localStorage.getItem('enigmaDeadline'))||Date.now()+86400000;localStorage.setItem('enigmaDeadline',deadline)}serverState.deadline=deadline;show('uploadStage');updateCount()};
-
-function updateCount(){const d=Number(serverState.deadline||localStorage.getItem('enigmaDeadline')||0),left=Math.max(0,d-Date.now());if(!d)return;const h=Math.floor(left/3600000),m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);$('#count').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(left<=0){$('#count').classList.add('hidden');$('#cdnote').textContent='Fica apenas o espaço reservado para algo que ainda não existe.'}}
-setInterval(updateCount,1000);
-
-$('#upload').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>12582912){alert('Escolha uma imagem de até 12 MB.');e.target.value='';return}if(!confirm('Esta será a única fotografia deste lugar e não poderá ser trocada. Tem certeza?')){e.target.value='';return}const label=e.target.closest('label');label.textContent='ENVIANDO…';label.setAttribute('aria-busy','true');try{const response=await fetch('/api/photo',{method:'POST',headers:{'content-type':f.type},body:f});const data=await response.json();if(response.status===409&&data.url){showPermanent(data.url);return}if(!response.ok)throw new Error(data.error||'Não foi possível guardar a fotografia.');showPermanent(data.url)}catch(err){alert(err.message);location.reload()}};
-function showPermanent(src){stopAll();$('#finalPhoto').src=src;show('perm')}
-$('#finalSong').onclick=()=>{finalState=true;stopAmb();if(!song.paused){song.pause();$('#finalSong').textContent='♫ Quase Sem Querer — tocar'}else{song.volume=.75;song.play().then(()=>$('#finalSong').textContent='♫ Quase Sem Querer — pausar').catch(()=>alert('O arquivo de áudio ainda não está disponível.'))}};
-async function restoreState(){try{const response=await fetch('/api/state',{cache:'no-store'});if(!response.ok)return;serverState=await response.json();if(serverState.photoUrl)showPermanent(serverState.photoUrl);else if(serverState.expired){show('uploadStage');updateCount()}}catch(e){}}
-restoreState();
-</script>
-</body>
-</html>
+Algumas coisas precisam do tempo certo para existir.`;
+async function ensureDeadline(){let deadline=serverState.deadline;try{const r=await fetch('/api/state',{method:'POST'});if(r.ok)serverState=await r.json();deadline=serverState.deadline}catch(e){}if(!deadline){deadline=Number(localStorage.getItem('enigmaDeadline'))||Date.now()+86400000;localStorage.setItem('enigmaDeadline',deadline)}serverState.deadline=deadline;updateCount()}
+async function typeMessage(instant=false){show('message');const box=$('#messageCopy');$('#choice').classList.add('hidden');box.textContent='';if(instant)box.textContent=messageText;else{const tokens=messageText.split(/(\s+)/);for(const token of tokens){box.textContent+=token;if(token.trim())await delay(72)}}$('#choice').classList.remove('hidden');await ensureDeadline();setTimeout(()=>$('#choice').scrollIntoView({behavior:'smooth',block:'nearest'}),150)}
+$('#revCont').onclick=()=>typeMessage(false);
+function updateCount(){const d=Number(serverState.deadline||localStorage.getItem('enigmaDeadline')||0);if(!d)return;const left=Math.max(0,d-Date.now());const h=Math.floor(left/3600000),m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);$('#count').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(left<=0){$('#count').classList.add('hidden');$('#cdnote').textContent='O tempo do enigma terminou. O que você decidir deixar aqui ainda pode permanecer.'}}setInterval(updateCount,1000);
+$('#upload').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>12582912){alert('Escolha uma imagem de até 12 MB.');e.target.value='';return}if(!confirm('Esta imagem ficará definitivamente neste lugar e não poderá ser trocada. Tem certeza?')){e.target.value='';return}const label=e.target.closest('label');label.childNodes[0].nodeValue='ENVIANDO…';label.setAttribute('aria-busy','true');try{const r=await fetch('/api/photo',{method:'POST',headers:{'content-type':f.type},body:f});const data=await r.json();if(r.status===409&&data.url){showPermanent(data.url);return}if(!r.ok)throw new Error(data.error||'Não foi possível guardar a imagem.');showPermanent(data.url)}catch(err){alert(err.message);location.reload()}};
+function showPermanent(src){stopAll();$('#finalPhoto').src=src;show('perm')}$('#finalSong').onclick=()=>{finalState=true;stopAmb();if(!song.paused){song.pause();$('#finalSong').textContent='♫ Quase Sem Querer — tocar'}else{song.volume=.75;song.play().then(()=>$('#finalSong').textContent='♫ Quase Sem Querer — pausar').catch(()=>alert('O arquivo de áudio ainda não está disponível.'))}};async function restoreState(){try{const r=await fetch('/api/state',{cache:'no-store'});if(!r.ok)return;serverState=await r.json();if(serverState.photoUrl)showPermanent(serverState.photoUrl);else if(serverState.expired){await typeMessage(true)}}catch(e){}}restoreState();
+</script></body></html>
