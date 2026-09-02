@@ -107,4 +107,134 @@ input{flex:1;min-height:48px;background:transparent;border:0;border-bottom:1px s
 <p>Mas nenhum deles deixou um registro de nós dois juntos.</p>
 <div class="stat">OBSERVAÇÕES: 7<br>REGISTROS DOS DOIS JUNTOS: 0<br>VARIÁVEL AUSENTE: ?</div>
 <form id="missForm"><input id="missAns" autocomplete="off" placeholder="sua resposta..."><button>RESPONDER</button></form>
-<p M�
+<p id="missFb" class="fb"></p><div class="cont"><button id="missCont" class="hidden">CONTINUAR</button></div>
+</div></section>
+
+<section id="reveal" class="scene"><div id="nova" class="nova"></div>
+<div id="rev" class="rev hidden">
+<img class="mont" src="/montagem.jpg?v=8" alt="Montagem">
+<div style="font:11px Arial;letter-spacing:.18em;opacity:.42">UMA REPRESENTAÇÃO</div>
+<div><button id="songTap" class="hidden">♫ TOCAR QUASE SEM QUERER</button> <button id="revCont">CONTINUAR</button></div>
+</div></section>
+
+<section id="message" class="scene"><div class="panel message-panel">
+<div class="ey">V — O QUE FALTAVA DIZER</div>
+<div class="copy">É uma imagem bonita.
+
+Só tem um pequeno problema:
+
+ela nunca aconteceu.
+
+Depois de tantas conversas, tantos momentos e algumas histórias que provavelmente ainda vamos lembrar por muito tempo, percebi uma coisa meio absurda:
+
+a gente não tem uma única foto juntos.
+
+Então essa parte ficou incompleta.
+
+Acho que ainda precisamos criar a original.
+
+Quando ela existir, o lugar dela é aqui.
+
+Tudo o que aconteceu até aqui aconteceu uma única vez.
+
+Este enigma não poderá ser refeito.
+
+A montagem não aparecerá novamente.
+
+Depois, sobra apenas um espaço reservado para algo que ainda não existe.
+
+A nossa primeira foto juntos.
+
+Você só poderá escolher uma.
+
+Depois de enviada, ela passa a ocupar definitivamente o lugar da montagem.
+
+E este site deixa de ser um enigma.
+
+Vira apenas uma pequena lembrança de alguns momentos que, por acaso, aconteceram.
+
+P.S.
+
+Este texto não precisou do Gepeteco.
+
+P.P.S.
+
+Não tenha pressa.
+
+Algumas coisas precisam do tempo certo para existir.</div>
+<div class="cont"><button id="messageCont">CONTINUAR</button></div>
+</div></section>
+
+<section id="uploadStage" class="scene"><div class="panel">
+<div class="ey">VI — UM ESPAÇO RESERVADO</div>
+<div class="cdblock">
+<div class="cdlabel">O ENIGMA DESAPARECE. A FOTO NÃO TEM PRAZO.</div>
+<div id="count" class="count">24:00:00</div>
+<p id="cdnote" class="note">Quando o tempo acabar, fica apenas o espaço reservado para a foto.</p>
+<label class="up">ESCOLHER NOSSA FOTO<input id="upload" type="file" accept="image/*" hidden></label>
+</div></div></section>
+
+<section id="perm" class="scene"><div class="perm">
+<div class="eq">P(encontro | aconteceu) = 1</div>
+<img id="finalPhoto" class="photo" alt="Nossa foto">
+<div class="music"><button id="finalSong" style="text-transform:none;letter-spacing:.02em">♫ Quase Sem Querer — tocar</button></div>
+<div class="date">São Paulo, 2026.</div>
+</div></section>
+</main>
+<button id="reset">reset teste</button>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+const $=s=>document.querySelector(s), scenes=[...document.querySelectorAll('.scene')], delay=m=>new Promise(r=>setTimeout(r,m));
+const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+const isPhoto=s=>norm(s).includes('foto')||norm(s).includes('fotografia');
+function show(id){scenes.forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');scrollTo(0,0)}
+
+const cv=$('#stars'),cx=cv.getContext('2d');let st=[];
+function rs(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);st=Array.from({length:110},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+.2,a:Math.random()*.7+.2}))}
+function dr(){cx.clearRect(0,0,innerWidth,innerHeight);st.forEach(s=>{cx.globalAlpha=s.a;cx.fillStyle='white';cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill()});requestAnimationFrame(dr)}
+addEventListener('resize',rs);rs();dr();
+
+let amb,song,ar=false,sr=false,finalState=false;
+window.onYouTubeIframeAPIReady=()=>{amb=new YT.Player('ambientYT',{width:'200',height:'113',videoId:'5gO0xpY_Y3E',playerVars:{controls:0,playsinline:1,rel:0,loop:1,playlist:'5gO0xpY_Y3E',enablejsapi:1},events:{onReady:()=>{ar=true;const b=$('#enter');if(b){b.disabled=false;b.textContent='ENTRAR'}},onError:()=>{const b=$('#enter');if(b){b.disabled=false;b.textContent='ENTRAR'}}}});song=new YT.Player('songYT',{width:'200',height:'113',videoId:'lk_EXr9xEr0',playerVars:{controls:0,playsinline:1,rel:0,enablejsapi:1},events:{onReady:()=>sr=true,onError:()=>$('#songTap')?.classList.remove('hidden')}})}
+function startAmb(){if(finalState||!ar)return false;try{amb.unMute();amb.setVolume(52);amb.playVideo();return true}catch(e){return false}}
+function stopAmb(){if(amb)try{amb.pauseVideo()}catch(e){}}
+function startSong(){stopAmb();if(!sr){$('#songTap').classList.remove('hidden');return}try{song.seekTo(0,true);song.unMute();song.setVolume(78);song.playVideo()}catch(e){$('#songTap').classList.remove('hidden')}}
+function pauseSong(){if(song)try{song.pauseVideo()}catch(e){}}
+function stopAll(){finalState=true;stopAmb();pauseSong()}
+
+$('#enter').onclick=async()=>{if(!ar)return;startAmb();if(sr)try{song.mute();song.setVolume(0);song.seekTo(0,true);song.playVideo()}catch(e){}show('intro');let t='Há coisas que só existem quando alguém as percebe.';$('#introLine').textContent='';for(const ch of t){$('#introLine').textContent+=ch;await delay(80)}await delay(1500);show('soc')};
+
+let socAttempts=0;
+$('#socForm').onsubmit=e=>{e.preventDefault();if(!$('#socAns').value.trim())return;socAttempts++;$('#socFb').textContent=socAttempts===1?'Boa hipótese. Mas talvez a pergunta seja menos sobre o que existe — e mais sobre aquilo que nunca chegou a ser registrado.':'Sócrates provavelmente responderia com outra pergunta. Talvez valha observar o que falta, não o que já está aí.';if(socAttempts>=2){$('#socHint').classList.remove('hidden');$('#socCont').classList.remove('hidden')}};
+$('#socHint').onclick=()=>{$('#socFb').textContent='Pista: pense em algo simples que costuma existir quando duas pessoas acumulam histórias juntas.'};
+$('#socCont').onclick=()=>show('pla');
+
+$('#plaForm').onsubmit=e=>{e.preventDefault();if(isPhoto($('#plaAns').value)){ $('#plaFb').textContent='Platão aceitaria sua resposta. Aristóteles talvez pedisse evidências.';$('#plaCont').classList.remove('hidden')} else $('#plaFb').textContent='Ainda não. Você está vendo uma imagem. O que falta para ela ser uma lembrança real?'};
+$('#plaCont').onclick=()=>show('ari');
+
+const ev=[['liberdade','⛩️','quando dois caminhos se cruzaram'],['europa','✈️','a primeira vez que o caminho foi para longe'],['biblioteca','📚','um terraço, livros, uma música especial e um dia super agradável'],['risoto','🍽️','a primeira vez do risoto'],['casa','🏠','a primeira vez na minha ZL'],['bike','🚲','duas rodas e um parque'],['gata','🐈','quatro patas e um veterinário']], correct=ev.map(x=>x[0]);
+let arr=[ev[2],ev[0],ev[5],ev[1],ev[6],ev[3],ev[4]],sel=null;
+function rt(){let t=$('#timeline');t.innerHTML='';arr.forEach((it,i)=>{let c=document.createElement('div');c.className='card';c.innerHTML=`<div class="num">${i+1}</div><div class="sym">${it[1]}</div><button type="button" class="hint">dica</button><div class="ih hidden">${it[2]}</div>`;c.querySelector('.hint').onclick=e=>{e.stopPropagation();c.querySelector('.ih').classList.toggle('hidden')};c.onclick=()=>{if(!sel){sel=c;c.classList.add('sel');return}if(sel===c){c.classList.remove('sel');sel=null;return}let a=[...t.children].indexOf(sel),b=[...t.children].indexOf(c);[arr[a],arr[b]]=[arr[b],arr[a]];sel=null;rt()};t.appendChild(c)})}
+rt();
+$('#check').onclick=()=>{let ok=arr.map(x=>x[0]).join('|')===correct.join('|');if(ok){$('#ariFb').innerHTML='7 pontos de uma história bem maior.<br>Mas existe uma ausência curiosa em todos eles.<br><br><strong>REGISTROS DOS DOIS JUNTOS: 0</strong><br>Há uma variável ausente nesta série.';$('#ariCont').classList.remove('hidden')} else $('#ariFb').textContent='Ainda não. Use os números e as pistas para reconstruir a sequência.'};
+$('#ariCont').onclick=()=>show('miss');
+
+$('#missForm').onsubmit=e=>{e.preventDefault();if(isPhoto($('#missAns').value)){ $('#missFb').textContent='Agora a hipótese faz sentido.';$('#missCont').classList.remove('hidden')} else $('#missFb').textContent='Pense menos no que aconteceu. Pense no que nunca foi registrado.'};
+$('#missCont').onclick=async()=>{show('reveal');$('#rev').classList.add('hidden');$('#nova').classList.remove('go');void $('#nova').offsetWidth;$('#nova').classList.add('go');await delay(2900);stopAmb();await delay(300);$('#rev').classList.remove('hidden');$('#rev').classList.add('show');startSong()};
+$('#songTap').onclick=startSong;
+$('#revCont').onclick=()=>{pauseSong();startAmb();show('message')};
+
+$('#messageCont').onclick=()=>{if(!localStorage.getItem('enigmaDeadline'))localStorage.setItem('enigmaDeadline',Date.now()+86400000);show('uploadStage');updateCount()};
+
+function updateCount(){const d=Number(localStorage.getItem('enigmaDeadline')||0),left=Math.max(0,d-Date.now());if(!d)return;const h=Math.floor(left/3600000),m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);$('#count').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(left<=0){$('#count').classList.add('hidden');$('#cdnote').textContent='Fica apenas o espaço reservado para algo que ainda não existe.'}}
+setInterval(updateCount,1000);
+
+$('#upload').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(!confirm('Esta será a única fotografia deste lugar. Tem certeza?')){e.target.value='';return}const bm=await createImageBitmap(f),max=1600,sc=Math.min(1,max/Math.max(bm.width,bm.height));const c=document.createElement('canvas');c.width=Math.round(bm.width*sc);c.height=Math.round(bm.height*sc);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);const src=c.toDataURL('image/jpeg',.88);try{localStorage.setItem('finalPhoto',src)}catch(err){alert('A foto ficou grande demais para este navegador.');return}showPermanent(src)};
+function showPermanent(src){stopAll();$('#finalPhoto').src=src;show('perm')}
+$('#finalSong').onclick=()=>{finalState=true;stopAmb();if(!sr)return;try{const s=song.getPlayerState();if(s===YT.PlayerState.PLAYING){song.pauseVideo();$('#finalSong').textContent='♫ Quase Sem Querer — tocar'}else{song.seekTo(0,true);song.unMute();song.setVolume(75);song.playVideo();$('#finalSong').textContent='♫ Quase Sem Querer — pausar'}}catch(e){}};
+const saved=localStorage.getItem('finalPhoto');if(saved)showPermanent(saved);
+$('#reset').onclick=()=>{if(confirm('Resetar o enigma neste aparelho?')){localStorage.removeItem('finalPhoto');localStorage.removeItem('enigmaDeadline');location.replace(location.pathname+'?v='+Date.now())}};
+</script>
+</body>
+</html>
