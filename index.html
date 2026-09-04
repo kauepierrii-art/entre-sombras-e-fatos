@@ -64,44 +64,46 @@ Só tem um pequeno problema:
 
 ela nunca aconteceu.
 
-Depois de tantas conversas, alguns lugares, algumas histórias e alguns momentos que acabaram ficando comigo, percebi uma coisa curiosa:
+Depois de tantas conversas, alguns lugares, histórias e momentos que acabaram ficando comigo, percebi uma coisa curiosa:
 
 não existe nenhuma fotografia nossa.
 
-Até hoje, tudo o que aconteceu entre nós ficou exatamente onde talvez muitas coisas importantes fiquem:
-
-na memória.
+Até hoje, tudo o que aconteceu entre nós ficou guardado apenas na memória.
 
 E talvez esteja tudo bem assim.
 
-Algumas coisas não precisam de um registro para terem acontecido.
+Uma foto não faria nenhum desses momentos terem sido mais ou menos importantes.
 
-Mas este lugar pode guardar uma coisa diferente.
+Mas a imagem que você acabou de ver tentou criar uma lembrança de algo que nunca aconteceu.
 
-Se algum dia existir uma imagem que você queira deixar aqui, ela pode ocupar o lugar desta que nunca aconteceu.
+Talvez este espaço possa fazer o contrário.
 
-E, se não existir, ou se você simplesmente preferir deixar tudo como está, também está tudo certo.
+Guardar uma lembrança de algo que aconteceu de verdade.
 
-Talvez algumas lembranças devam continuar existindo apenas dentro de quem viveu aquilo.
+Se algum dia existir uma imagem que você queira deixar aqui, ela pode ocupar o lugar desta que nunca existiu.
+
+E, se ela nunca existir, tudo bem também.
+
+Talvez nem toda lembrança precise de uma fotografia.
 
 Este espaço vai continuar aqui por um tempo.
 
-Você decide se alguma coisa deve ficar nele.
+Você decide se alguma coisa deve sair da memória e ficar aqui também.
 
 P.S.
 
 Não tenha pressa.
 
-Algumas coisas precisam do tempo certo para existir.`;
+Há momentos que precisam do tempo certo para existir.`;
 const THIRTY_DAYS=30*86400000;
 async function ensureDeadline(){let deadline=serverState.deadline;try{const r=await fetch('/api/state',{method:'POST'});if(r.ok)serverState=await r.json();deadline=serverState.deadline}catch(e){}if(!deadline){deadline=Number(localStorage.getItem('enigmaDeadline'))||Date.now()+THIRTY_DAYS;localStorage.setItem('enigmaDeadline',deadline)}serverState.deadline=deadline;updateCount()}
-async function typeMessage(instant=false){show('message');const box=$('#messageCopy');$('#choice').classList.add('hidden');box.textContent='';if(instant)box.textContent=messageText;else{const tokens=messageText.split(/(\s+)/);for(const token of tokens){box.textContent+=token;if(token.trim())await delay(72)}}$('#choice').classList.remove('hidden');await ensureDeadline();setTimeout(()=>$('#choice').scrollIntoView({behavior:'smooth',block:'nearest'}),150)}
+async function typeMessage(instant=false){show('message');const box=$('#messageCopy');$('#choice').classList.add('hidden');box.textContent='';if(instant)box.textContent=messageText;else{const tokens=messageText.split(/(\\s+)/);for(const token of tokens){box.textContent+=token;if(token.trim())await delay(72)}}$('#choice').classList.remove('hidden');await ensureDeadline()}
 $('#revCont').onclick=()=>{if($('#revCont').disabled)return;clearInterval(revealTimer);typeMessage(false)};
 function updateCount(){const d=Number(serverState.deadline||localStorage.getItem('enigmaDeadline')||0);if(!d)return;const left=Math.max(0,d-Date.now());const h=Math.floor(left/3600000),m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);$('#count').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(left<=0){$('#count').classList.add('hidden');$('#cdnote').textContent='O tempo do enigma terminou. O que você decidir deixar aqui ainda pode permanecer.'}}setInterval(updateCount,1000);
 $('#upload').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>12582912){alert('Escolha uma imagem de até 12 MB.');e.target.value='';return}if(!confirm('Esta imagem ficará definitivamente neste lugar e não poderá ser trocada. Tem certeza?')){e.target.value='';return}const label=e.target.closest('label');label.childNodes[0].nodeValue='ENVIANDO…';label.setAttribute('aria-busy','true');try{const r=await fetch('/api/photo',{method:'POST',headers:{'content-type':f.type},body:f});const data=await r.json();if(r.status===409&&data.url){showPermanent(data.url);return}if(!r.ok)throw new Error(data.error||'Não foi possível guardar a imagem.');showPermanent(data.url)}catch(err){alert(err.message);location.reload()}};
 function showPermanent(src){stopAll();$('#finalPhoto').src=src;show('perm')}
 $('#finalSong').onclick=()=>{finalState=true;stopAmb();if(!song.paused){song.pause();$('#finalSong').textContent='♫ Quase Sem Querer — tocar'}else{song.volume=.75;song.play().then(()=>$('#finalSong').textContent='♫ Quase Sem Querer — pausar').catch(()=>alert('O arquivo de áudio ainda não está disponível.'))}};
-async function restoreState(){try{const r=await fetch('/api/state',{cache:'no-store'});if(!r.ok)return;serverState=await r.json();if(serverState.photoUrl)showPermanent(serverState.photoUrl);else if(serverState.expired){await typeMessage(true)}}catch(e){}}
+async function restoreState(){try{const r=await fetch('/api/state',{cache:'no-store'});if(!r.ok)return;serverState=await r.json();if(serverState.photoUrl)showPermanent(serverState.photoUrl);else if(serverState.deadline){await typeMessage(true)}}catch(e){}}
 restoreState();
 </script>
 </body>
